@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:image" content="style/badie_square__trans_16.png">
+  <meta name="description" content="nice mice!">
+  <meta name="author" content="Aleksandr Filippov">
+
+  <title>NifTI Viewer </title>
+  <link rel="apple-touch-icon" sizes="180x180" href="style/badie_square__trans_364.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="style/badie_square__trans_32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="style/badie_square__trans_16.png">
+  <link rel="manifest" href="style/site.webmanifest">
+
+  <link rel="stylesheet" href="style/w3.css">
+  <link rel="stylesheet" href="style/font-awesome-4.7.0/css/font-awesome.min.css"/>
+
+  <link rel="stylesheet" type="text/css" href="lib/papaya_lib/papaya.css" />
+  <link rel="stylesheet" type="text/css" href="style/style.css">
+
+<!--  <link rel="stylesheet" type="text/css" href="http://rii.uthscsa.edu/mango/papaya/papaya.css?version=0.6.5&build=692" />-->
+<!--  <script type="text/javascript" src="http://rii.uthscsa.edu/mango/papaya/papaya.js?version=0.6.5&build=692"></script>-->
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://docs.opencv.org/3.4.0/opencv.js"></script>
+  <script src="https://www.lactame.com/lib/image-js/0.21.2/image.min.js"></script>
+
+
+  <script type="text/javascript" src="lib/papaya_lib/papaya.js"></script>
+  <script type="text/javascript" src="js/mainParameters.js"></script>
+
+  <script type="text/javascript">
+        papaya.Container.syncViewers = true;
+        papaya.Container.WorldSpace = false;
+        papaya.Container.maxPercent = 50;
+
+
+        var params_mri = [];
+        params_mri["smoothDisplay"] = false;
+        params_mri["interpolation"] = false;
+        params_mri["expandable"] = true;
+
+
+        var params_label = [];
+        params_label["smoothDisplay"] = false;
+        params_label["interpolation"] = false;
+        params_label["worldSpace"] = true;
+        params_label["expandable"] = true;
+
+
+  </script>
+
+  <script type="text/javascript" src="js/nifti-reader.js"></script>
+  <script type="text/javascript" src="js/nifti-reader-min.js"></script>
+  <script type="text/javascript" src="js/connectedComponents3DAll.js"></script>
+
+  <script type="text/javascript" src="js/mainMeshNetFunctions.js"></script>
+  <script type="text/javascript" src="js/mainNiftiReadingFunctions.js"></script>
+  <script type="text/javascript" src="js/checkCompatibility.js"></script>
+
+
+
+  <style>
+  .navbar-brand {
+  float:left;
+  width:10%;
+  }
+  </style>
+
+
+<!--  <title>murine segmentation predict</title>-->
+
+</head>
+
+
+
+<nav class="pseudo-navbar">
+  <div class="navbar">
+    <table border="0" width="100%" id="header" style="table-layout: fixed; margin: 0px; padding: 0; color: white;">
+      <tr style="height: 50px;">
+        <td style="text-align: right;">
+          <a class="not-nav"
+             href="https://www.cityofhope.org/people/badie-behnam"
+             role="button">
+            <img
+              src="style/favicon_io/badie_square__trans_364.png"
+              height="32"
+              alt="Happy Badie"
+              style="margin-top: -1px;"/>
+            <strong class="badie">Badass</strong>Badie
+          </a>
+        </td>
+        <td style="text-align: center; width: 70%; font-size: 100%;">
+<!--          <a class="nav-link" href="https://www.cityofhope.org/people/badie-behnam">-->
+<!--            <strong class="d-none d-sm-block ms-1">PurineMurine</strong>-->
+<!--          </a>-->
+<!--          <script src="//rss.bloople.net/?url=https%3A%2F%2Fpubmed.ncbi.nlm.nih.gov%2Frss%2Fsearch%2F1LK5GZMdRGzOtjpDizLDAfh0oQZO8O2AvLNYrujFQGn8txUUfd%2F%3Flimit%3D5%26utm_campaign%3Dpubmed-2%26fc%3D20220522195958&detail=-1&limit=1&showtitle=false&forceutf8=true&type=js"></script>-->
+          <a class="title" href="/">
+            <h3>NIfTI Viewer</h3>
+          </a>
+        </td>
+        <td style="text-align: left;">
+          <a class="nav-link d-sm-flex align-items-sm right"
+           href="https://github.com/imafilippov"
+           role="button">
+            <img
+              src="style/GitHub-Mark-32px.png"
+              height="24"
+              alt="Github"
+              style="margin-top: -1px;"
+            />
+          Sasha
+          </a>
+        </td>
+
+      </tr>
+    </table>
+  </div>
+<!--  <div class="title" align="center">-->
+<!--    -->
+<!--  </div>-->
+</nav>
+<!--<br>-->
+<body style="background: #333344;">
+<!--  <br>-->
+  <div class="info">
+    <table border="1" width="100%" id="info" style="table-layout: fixed; margin: 0px; padding: 0;">
+      <tr>
+        <td style="color: white; text-align: center;">
+          In the fields below, please select the sequence numbers corresponding to the T2w and FLAIR images you wish to predict volumes on
+        </td>
+      </tr>
+<!--      <tr>-->
+<!--        <td>-->
+<!--          Sample DICOM dir is:-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--        include a test case or unit sample with DICOM, nifti, etc-->
+<!--      </tr>-->
+    </table>
+  </div>
+  <div class="login">
+    <table border="0" width="100%" id="forms" style="table-layout: fixed; margin: 0px; padding: 0;">
+      <tr>
+        <td>
+
+        </td>
+      </tr>
+      <tr>
+        <form action="{{ url_for('predict')}}" method="post">
+          <td style="text-align: center;">
+            <input type="text" name="T2w_seq" placeholder="T2 sequence number" required="required" />
+          </td>
+          <td style="text-align: center;">
+            <input type="text" name="FLAIR_seq" placeholder="FLAIR sequence number" required="required" />
+          </td>
+          <td style="text-align: center;">
+            <input type="hidden" name="btn_identifier" value="gen_pred"/>
+            <button type="submit" class="btn btn-primary btn-block btn-large">Generate Prediction</button>
+          </td>
+        </form>
+        <td style="color: white;">
+          {{ MESSAGE_1 }}
+        </td>
+
+      </tr>
+    </table>
+  </div>
+
+
+     <!-- Action is where the data is sent. In our case, predict page.
+     If action is omitted, it assumed to be the current page -->
+
+<!--    <form action="{{ url_for('predict')}}"method="post">-->
+<!--       <input type="text" name="image file" placeholder="file location" required="required" /><br><p>-->
+<!--       <input type="text" name="image slice" placeholder="image slice" /><br><p>-->
+<!--       <input type="hidden" name="btn_identifier" value="image_slice" />-->
+<!--       <button type="submit" class="btn btn-primary btn-block btn-large">show image slice</button></p>-->
+<!--    </form>-->
+
+   <br>
+
+   <h4 style="color:Violet;">
+   {{ prediction_text }} </h4>
+
+
+<div class="papa">
+  <table border="0" width="100%" id="papayatable" style="table-layout: fixed; margin: 0px; padding: 0;">
+    <tr>
+      <td><div class="papaya" id="mri_viewer" data-params="params_mri"></div></td>
+      <td><div class="papaya" id="label_viewer" data-params="params_label"></div></td>
+    </tr>
+<!--    <tr>-->
+<!--      window.open(papayaContainers[0].viewer.canvas.toDataURL("image/png"));-->
+<!--    </tr>-->
+  </table>
+</div>
+
+
+</body>
+</html>
